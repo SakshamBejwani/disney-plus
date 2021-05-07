@@ -35,7 +35,7 @@ function Detail() {
                 2018 - 7m - Family, Fantasy, Kids, Animation
             </SubTitle>
             <Description>
-
+            Bao is a 2018 American computer-animated short film written and directed by Domee Shi and produced by Pixar Animation Studios. It was released with Incredibles 2 on June 15, 2018. The film is about an aging and lonely Chinese-Canadian mother, suffering from empty nest syndrome, who receives an unexpected second chance at motherhood when she makes a steamed bun (baozi) that comes to life. The film won the Oscar for the Best Animated Short Film at the 91st Academy Awards.
             </Description>
         </Container>
     )
@@ -67,7 +67,7 @@ const Background = styled.div`
 
 const ImageTitle = styled.div`
     
-    height: 30vh:
+    height: 50vh:
     width: 35vw;
     min-height: 170px;
     min-width: 200px;
@@ -140,6 +140,14 @@ background: rgba(0, 0,0, 0.6);
 `
 
 const SubTitle = styled.div`
+    color: rgb( 249, 249, 249);
+    font-size: 20px;
+    min-height: 25px;
+    margin-top: 26px;
 `
 const Description = styled.div`
-`
+    line-height: 1.4;
+    font-size: 18px;
+    margin-top: 16px;
+    color: rgb(249, 249, 249);
+    `
