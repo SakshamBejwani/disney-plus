@@ -1,11 +1,71 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
+import {Link} from "react-router-dom"
+import { auth, provider } from "../firebase"
+import { useHistory } from "react-router-dom"
+
+import{
+    selectUserName,
+    selectUserPhoto,
+    setUserLogin,
+    setSignOut
+}from "../features/user/userSlice"
+
+import { useDispatch, useSelector } from "react-redux"
 
 function Header() {
+    const dispatch = useDispatch()
+    const userName = useSelector(selectUserName);
+    const userPhoto = useSelector(selectUserPhoto);
+    const history = useHistory();
+
+    useEffect (()=>{
+        auth.onAuthStateChanged(async (user)=>{
+            if(user){
+                dispatch(setUserLogin({
+                    name:user.displayName,
+                    email: user.email,
+                    photo: user.photoURL
+                }))
+                history.push('/')
+            }
+        })
+    }, [])
+
+    const signIn = () => {
+        auth.signInWithPopup(provider)
+        .then((result)=>{
+            let user = result.user;
+            dispatch(setUserLogin({
+                name:user.displayName,
+                email: user.email,
+                photo: user.photoURL
+                }))
+                history.push('/')
+        })
+
+
+    }
+    const signOut = () =>{
+        auth.signOut()
+        .then(()=>{
+        dispatch(setSignOut);
+        history.push('/login')
+        })
+    }
     return (
         <Nav>
+            <Link to={'/'}>
             <Logo src="/images/logo.svg" />
-            <NavMenu>
+            </Link>
+            {
+                !userName ?(
+                    <LoginContainer>
+                        <Login onClick={signIn}> Login </Login>
+                    </LoginContainer>
+                    ):
+                    <>
+                            <NavMenu>
                 <a>
                     <img src="/images/home-icon.svg" />
                     <span>HOME</span>
@@ -31,7 +91,13 @@ function Header() {
                     <span>SERIES</span>
                 </a>
             </NavMenu>
-            <UserImg src="https://avatars.githubusercontent.com/u/39835314?v=4"/>
+                             <UserImg onClick={signOut} src="https://avatars.githubusercontent.com/u/39835314?v=4"/>
+
+
+                    </>
+            }
+            
+            
 
 
         </Nav>
@@ -53,6 +119,7 @@ const Nav = styled.nav`
 
 const Logo = styled.img`
     width: 80px;
+    margin-top:10px;
 
 `
 const NavMenu = styled.div`
@@ -99,8 +166,35 @@ const NavMenu = styled.div`
 
 `
 const UserImg = styled.img`
+    cursor:pointer;
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    align-items: center;
+    margin-top: 10px;
+`
+const Login = styled.div`
+    cursor:pointer;
+    border: 1px solid #f9f9f9;
+    padding: 8px 16px;
+    border-radius: 4px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    backround-color: rgba(0, 0, 0, 0.6);
+    transition: all 300ms;
+
+    &: hover{
+        background-color: #f9f9f9;
+        color: #000;
+        border-color:transparent;
+    }
+
+`
+
+const LoginContainer = styled.div`
+    margin-top: 15px;
+    flex:1;
+    display: flex;
+    justify-content: flex-end;
+    width: 10px;
+    height: 40px;
 `
